@@ -1,0 +1,51 @@
+{
+  "entities": {
+    "users": {
+      "title": "Users",
+      "description": "User profile and subscription state",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "subscriptionStatus": { "type": "string" },
+        "stripeCustomerId": { "type": "string" },
+        "stripeSubscriptionId": { "type": "string" },
+        "interviewsCount": { "type": "number" },
+        "interviewsLimit": { "type": "number" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["uid", "email"]
+    },
+    "interviews": {
+      "title": "Interviews",
+      "description": "Completed interview records, candidate evaluations, and reports",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "role": { "type": "string" },
+        "candidateName": { "type": "string" },
+        "candidateEmail": { "type": "string" },
+        "isCandidateInvite": { "type": "boolean" },
+        "report": { "type": "string" },
+        "score": { "type": "number" },
+        "redFlags": { "type": "number" },
+        "summary": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["userId", "role"]
+    },
+    "system_config": {
+      "title": "System Config",
+      "description": "Platform settings including Gemini AI runtime parameters",
+      "type": "object",
+      "properties": {
+        "apiKey": { "type": "string" },
+        "model": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      }
+    }
+  }
+}

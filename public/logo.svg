@@ -1,0 +1,150 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
+  <defs>
+    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F9E29D" />
+      <stop offset="35%" stop-color="#DFB15B" />
+      <stop offset="70%" stop-color="#C58F30" />
+      <stop offset="100%" stop-color="#F2CB77" />
+    </linearGradient>
+    <linearGradient id="goldStroke" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FCEAB3" />
+      <stop offset="50%" stop-color="#DFB15B" />
+      <stop offset="100%" stop-color="#B87E23" />
+    </linearGradient>
+    <radialGradient id="bgGlow" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#122543" />
+      <stop offset="100%" stop-color="#071224" />
+    </radialGradient>
+  </defs>
+
+  <!-- Background rounded canvas -->
+  <rect width="500" height="500" rx="40" fill="url(#bgGlow)" />
+
+  <g transform="translate(10, -5)">
+    <!-- Laurel Wreath Leaves on Head -->
+    <!-- Top wreath stem -->
+    <path d="M 215 110 C 240 102 275 105 305 125" fill="none" stroke="url(#goldGradient)" stroke-width="3" stroke-linecap="round" />
+    
+    <!-- Leaves along wreath -->
+    <!-- Leaf 1 (Front top) -->
+    <path d="M 215 110 C 205 95 195 95 190 102 C 198 108 208 112 215 110 Z" fill="url(#goldGradient)" />
+    <!-- Leaf 2 (Upper front) -->
+    <path d="M 218 102 C 220 85 210 75 200 80 C 205 90 212 98 218 102 Z" fill="url(#goldGradient)" />
+    <!-- Leaf 3 -->
+    <path d="M 235 105 C 235 88 245 78 255 82 C 250 92 242 100 235 105 Z" fill="url(#goldGradient)" />
+    <!-- Leaf 4 -->
+    <path d="M 252 107 C 260 90 272 85 280 92 C 275 100 265 105 252 107 Z" fill="url(#goldGradient)" />
+    <!-- Leaf 5 -->
+    <path d="M 270 112 C 285 98 300 98 308 106 C 298 112 285 114 270 112 Z" fill="url(#goldGradient)" />
+    <!-- Leaf 6 (Back leaf cluster) -->
+    <path d="M 292 120 C 310 110 325 115 330 125 C 318 128 305 126 292 120 Z" fill="url(#goldGradient)" />
+    <!-- Leaf 7 (Lower laurel accent) -->
+    <path d="M 205 118 C 190 115 185 125 192 132 C 198 128 205 122 205 118 Z" fill="url(#goldGradient)" />
+    <!-- Leaf 8 -->
+    <path d="M 225 116 C 215 125 218 135 228 135 C 230 128 228 120 225 116 Z" fill="url(#goldGradient)" />
+    <!-- Leaf 9 -->
+    <path d="M 248 117 C 242 128 248 138 258 136 C 258 128 254 121 248 117 Z" fill="url(#goldGradient)" />
+    <!-- Leaf 10 -->
+    <path d="M 272 120 C 270 132 278 140 288 136 C 286 128 280 123 272 120 Z" fill="url(#goldGradient)" />
+    <!-- Leaf 11 (back wreath tip) -->
+    <path d="M 315 130 C 330 128 340 138 335 148 C 325 142 320 135 315 130 Z" fill="url(#goldGradient)" />
+
+    <!-- Goddess Hera Profile Face & Neck (Master Contour Line) -->
+    <path d="
+      M 208 125
+      C 202 138 198 148 198 158
+      C 198 160 193 162 190 165
+      C 188 167 188 170 189 172
+      C 192 175 197 175 198 178
+      C 198 185 192 198 185 212
+      C 183 216 182 220 186 222
+      C 192 225 198 224 200 227
+      C 202 230 196 235 190 238
+      C 196 242 202 243 200 248
+      C 197 254 190 258 192 265
+      C 195 272 208 274 212 273
+      C 220 271 228 262 236 250
+      C 245 238 252 215 255 198
+    " fill="none" stroke="url(#goldGradient)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" />
+
+    <!-- Classic Facial Profile (Left edge) -->
+    <!-- Forehead down to Nose, Lips, Chin, Neck -->
+    <path d="
+      M 202 142
+      C 196 155 192 165 190 175
+      C 186 186 180 205 174 215
+      C 172 218 173 221 177 222
+      C 184 224 186 226 182 230
+      C 177 234 178 238 184 240
+      C 178 244 176 248 179 253
+      C 182 258 188 260 191 264
+      C 194 269 191 273 194 276
+      C 199 281 208 282 214 278
+      C 224 270 230 255 238 235
+    " fill="none" stroke="url(#goldGradient)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" />
+
+    <!-- Eye & Brow -->
+    <path d="M 192 188 C 198 184 208 184 215 188" fill="none" stroke="url(#goldGradient)" stroke-width="3" stroke-linecap="round" />
+    <path d="M 195 198 C 200 195 208 196 214 201" fill="none" stroke="url(#goldGradient)" stroke-width="3" stroke-linecap="round" />
+    <path d="M 200 200 C 202 203 206 203 208 200" fill="none" stroke="url(#goldGradient)" stroke-width="2" stroke-linecap="round" />
+
+    <!-- Delicate Lips / Mouth -->
+    <path d="M 183 234 C 189 233 198 234 205 238" fill="none" stroke="url(#goldGradient)" stroke-width="3" stroke-linecap="round" />
+
+    <!-- Ear & Earring -->
+    <path d="M 262 202 C 268 196 276 200 274 212 C 272 222 265 228 260 225 C 256 222 258 210 263 208 C 265 212 265 218 263 220" fill="none" stroke="url(#goldGradient)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    <circle cx="262" cy="230" r="3" fill="url(#goldGradient)" />
+
+    <!-- Classical Wavy Hair Lines flowing from forehead back -->
+    <path d="M 202 142 C 220 148 245 158 262 180" fill="none" stroke="url(#goldGradient)" stroke-width="3.5" stroke-linecap="round" />
+    <path d="M 215 155 C 232 165 252 178 260 195" fill="none" stroke="url(#goldGradient)" stroke-width="2.5" stroke-linecap="round" />
+    <path d="M 225 140 C 242 150 260 165 272 188" fill="none" stroke="url(#goldGradient)" stroke-width="2.5" stroke-linecap="round" />
+    
+    <!-- Crown & Bun (Chignon) -->
+    <path d="M 275 130 C 310 135 345 155 350 190 C 355 220 335 245 305 255 C 290 260 270 255 260 248" fill="none" stroke="url(#goldGradient)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M 290 145 C 322 155 338 175 340 200 C 342 225 325 240 300 246" fill="none" stroke="url(#goldGradient)" stroke-width="3" stroke-linecap="round" />
+    <path d="M 305 160 C 330 175 332 198 328 215 C 322 232 305 238 290 240" fill="none" stroke="url(#goldGradient)" stroke-width="2.5" stroke-linecap="round" />
+    
+    <!-- Tendril & Hair wisps behind ear / nape -->
+    <path d="M 270 235 C 285 245 292 260 286 275 C 282 285 272 290 265 285 C 260 280 262 268 270 262" fill="none" stroke="url(#goldGradient)" stroke-width="3" stroke-linecap="round" />
+    <path d="M 285 245 C 300 255 305 270 298 285" fill="none" stroke="url(#goldGradient)" stroke-width="2.5" stroke-linecap="round" />
+
+    <!-- Slender Graceful Neck & Classical Tunic / Peplos Drapery -->
+    <!-- Front Neck Curve -->
+    <path d="M 210 280 C 218 305 232 340 245 365" fill="none" stroke="url(#goldGradient)" stroke-width="4.5" stroke-linecap="round" />
+    <!-- Back Neck Curve -->
+    <path d="M 272 285 C 285 315 308 348 335 365" fill="none" stroke="url(#goldGradient)" stroke-width="4.5" stroke-linecap="round" />
+    <!-- Tunic Neckline Swag / Drapery -->
+    <path d="M 225 355 C 255 375 300 378 340 360" fill="none" stroke="url(#goldGradient)" stroke-width="4" stroke-linecap="round" />
+    <path d="M 245 375 C 275 390 310 388 335 375" fill="none" stroke="url(#goldGradient)" stroke-width="2.5" stroke-linecap="round" />
+  </g>
+
+  <!-- Typography -->
+  <!-- "HERA" -->
+  <text x="250" y="420" 
+        font-family="'Playfair Display', 'Cinzel', 'Times New Roman', 'Baskerville', serif" 
+        font-size="64" 
+        font-weight="800" 
+        letter-spacing="6" 
+        fill="url(#goldGradient)" 
+        text-anchor="middle">HERA</text>
+
+  <!-- Subtitle: "HUMAN EVALUATION & RECRUITMENT AI" -->
+  <text x="250" y="452" 
+        font-family="'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" 
+        font-size="14.5" 
+        font-weight="600" 
+        letter-spacing="3.5" 
+        fill="#FFFFFF" 
+        opacity="0.95"
+        text-anchor="middle">HUMAN EVALUATION &amp;</text>
+        
+  <text x="250" y="474" 
+        font-family="'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" 
+        font-size="14.5" 
+        font-weight="600" 
+        letter-spacing="3.5" 
+        fill="#FFFFFF" 
+        opacity="0.95"
+        text-anchor="middle">RECRUITMENT AI</text>
+</svg>

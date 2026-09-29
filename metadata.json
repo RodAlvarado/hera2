@@ -1,0 +1,6 @@
+{
+  "name": "HERA - Human Evaluation & Recruitment AI",
+  "description": "Human Evaluation & Recruitment AI SaaS platform with automated voice interviews, subscription management, and candidate evaluation reports.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
