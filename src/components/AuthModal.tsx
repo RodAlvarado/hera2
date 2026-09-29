@@ -95,7 +95,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
           <div className="flex justify-center mb-3">
             <HeraLogo size="lg" />
           </div>
-          <h3 className="text-xl font-bold tracking-tight">HERA SaaS</h3>
+          <h3 className="text-xl font-bold tracking-tight">HERA</h3>
           <p className="text-indigo-200 text-xs mt-1">Human Evaluation &amp; Recruitment AI</p>
         </div>
 

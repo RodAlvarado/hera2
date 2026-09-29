@@ -137,7 +137,7 @@ export const PricingModal: React.FC<PricingModalProps> = ({ isOpen, onClose }) =
           <div className="absolute -top-12 -right-12 w-48 h-48 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-semibold mb-3 border border-indigo-500/30">
             <Zap className="w-3.5 h-3.5" />
-            Planes de Suscripción HERA SaaS
+            Planes de Suscripción HERA
           </div>
           <h3 className="text-2xl md:text-3xl font-extrabold tracking-tight">Elige el plan ideal para tu equipo</h3>
           <p className="text-slate-400 text-xs md:text-sm mt-1 max-w-lg mx-auto">

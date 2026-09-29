@@ -222,71 +222,130 @@ if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
 }
 
 /**
- * Finds the best authentic American female voice in English (en-US).
- * Strictly excludes any Spanish or male voice.
+ * Ensures browser speech synthesis voices are populated.
  */
-function findAmericanFemaleVoice(): SpeechSynthesisVoice | null {
+export function ensureVoicesLoaded(): Promise<SpeechSynthesisVoice[]> {
+  if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
+    return Promise.resolve([]);
+  }
+  const voices = window.speechSynthesis.getVoices();
+  if (voices.length > 0) {
+    cachedBrowserVoices = voices;
+    return Promise.resolve(voices);
+  }
+  return new Promise((resolve) => {
+    let resolved = false;
+    const handleVoices = () => {
+      if (resolved) return;
+      resolved = true;
+      cachedBrowserVoices = window.speechSynthesis.getVoices();
+      resolve(cachedBrowserVoices);
+    };
+    window.speechSynthesis.addEventListener('voiceschanged', handleVoices, { once: true });
+    setTimeout(() => {
+      if (!resolved) {
+        resolved = true;
+        cachedBrowserVoices = window.speechSynthesis.getVoices();
+        resolve(cachedBrowserVoices);
+      }
+    }, 150);
+  });
+}
+
+/**
+ * Finds the highest quality authentic American female voice in English (en-US).
+ * Strictly excludes any Spanish, male, or robotic non-English voices.
+ */
+function findAmericanFemaleVoice(availableVoices?: SpeechSynthesisVoice[]): SpeechSynthesisVoice | null {
   if (typeof window === 'undefined' || !('speechSynthesis' in window)) return null;
-  const voices = cachedBrowserVoices.length > 0 ? cachedBrowserVoices : window.speechSynthesis.getVoices();
+  const voices = (availableVoices && availableVoices.length > 0)
+    ? availableVoices
+    : (cachedBrowserVoices.length > 0 ? cachedBrowserVoices : window.speechSynthesis.getVoices());
+  
   if (!voices || voices.length === 0) return null;
 
-  const isFemaleName = (name: string) => {
-    const lower = name.toLowerCase();
-    return lower.includes('female') || 
-      lower.includes('samantha') || 
-      lower.includes('victoria') || 
-      lower.includes('jenny') || 
-      lower.includes('zira') || 
-      lower.includes('ava') || 
-      lower.includes('aria') || 
-      lower.includes('allison') || 
-      lower.includes('karen') || 
-      lower.includes('susan') || 
-      lower.includes('salli') || 
-      lower.includes('google us english') ||
-      lower.includes('natural');
+  const isExcluded = (v: SpeechSynthesisVoice) => {
+    const lang = (v.lang || '').toLowerCase();
+    const name = (v.name || '').toLowerCase();
+    // Strictly block Spanish
+    if (lang.startsWith('es') || lang.includes('es-') || lang.includes('es_')) return true;
+    if (name.includes('spanish') || name.includes('español')) return true;
+    // Strictly block male voices
+    if (name.includes('male') && !name.includes('female')) return true;
+    if (
+      name.includes('david') || 
+      name.includes('guy') || 
+      name.includes('george') || 
+      name.includes('diego') || 
+      name.includes('jorge') || 
+      name.includes('enrique') ||
+      name.includes('mark') ||
+      name.includes('stefan') ||
+      name.includes('daniel')
+    ) return true;
+    return false;
   };
 
-  const isMaleOrNonEnglish = (name: string, lang: string) => {
-    const lowerName = name.toLowerCase();
-    const lowerLang = (lang || '').toLowerCase();
-    if (lowerLang.startsWith('es')) return true; // Never allow Spanish
-    return (lowerName.includes('male') && !lowerName.includes('female')) ||
-      lowerName.includes('david') || 
-      lowerName.includes('guy') || 
-      lowerName.includes('george') || 
-      lowerName.includes('diego') || 
-      lowerName.includes('jorge') || 
-      lowerName.includes('enrique');
-  };
+  // High priority list of top American female voices
+  const PRIORITY_FEMALE_VOICES = [
+    'microsoft jenny',
+    'microsoft aria',
+    'microsoft michelle',
+    'microsoft ana',
+    'google us english',
+    'samantha',
+    'victoria',
+    'allison',
+    'ava',
+    'microsoft zira',
+    'salli',
+    'joanna',
+    'kendra',
+    'kimberly',
+    'karen',
+    'susan'
+  ];
 
-  // 1. Preferred US English Female voices
-  const preferredVoice = voices.find(v => 
-    (v.lang === 'en-US' || v.lang === 'en_US') && 
-    isFemaleName(v.name) && 
-    !isMaleOrNonEnglish(v.name, v.lang)
-  );
-  if (preferredVoice) return preferredVoice;
+  // 1. Highest priority: Well-known natural American female voices in en-US
+  for (const targetName of PRIORITY_FEMALE_VOICES) {
+    const matched = voices.find(v => {
+      const vLang = (v.lang || '').toLowerCase();
+      const vName = (v.name || '').toLowerCase();
+      return (vLang === 'en-us' || vLang === 'en_us') && vName.includes(targetName) && !isExcluded(v);
+    });
+    if (matched) return matched;
+  }
 
-  // 2. Any en-US voice that is not male and not Spanish
-  const usVoice = voices.find(v => 
-    (v.lang === 'en-US' || v.lang === 'en_US') && 
-    !isMaleOrNonEnglish(v.name, v.lang)
-  );
-  if (usVoice) return usVoice;
+  // 2. Any en-US voice that identifies as female or natural
+  const anyFemaleUs = voices.find(v => {
+    const vLang = (v.lang || '').toLowerCase();
+    const vName = (v.name || '').toLowerCase();
+    const hasFemaleMarker = vName.includes('female') || vName.includes('natural') || vName.includes('neural');
+    return (vLang === 'en-us' || vLang === 'en_us') && hasFemaleMarker && !isExcluded(v);
+  });
+  if (anyFemaleUs) return anyFemaleUs;
 
-  // 3. Any English voice that is not male
-  const enVoice = voices.find(v => 
-    v.lang.startsWith('en') && 
-    !isMaleOrNonEnglish(v.name, v.lang)
-  );
-  if (enVoice) return enVoice;
+  // 3. Any en-US voice that is not excluded (fallback en-US)
+  const anyUs = voices.find(v => {
+    const vLang = (v.lang || '').toLowerCase();
+    return (vLang === 'en-us' || vLang === 'en_us') && !isExcluded(v);
+  });
+  if (anyUs) return anyUs;
+
+  // 4. Any English voice that is female
+  const anyEnglishFemale = voices.find(v => {
+    const vLang = (v.lang || '').toLowerCase();
+    const vName = (v.name || '').toLowerCase();
+    return vLang.startsWith('en') && (vName.includes('female') || vName.includes('samantha')) && !isExcluded(v);
+  });
+  if (anyEnglishFemale) return anyEnglishFemale;
 
   return null;
 }
 
 /**
- * Plays speech using the browser's built-in Web Speech Synthesis with an American female voice in English
+ * Plays speech using the browser's built-in Web Speech Synthesis with an authentic American female voice in English (en-US).
+ * Strictly forces en-US language, calibrated natural cadence, and avoids robotic distortions.
  */
 export function speakWithBrowser(text: string, onEnded?: () => void): () => void {
   stopCurrentSpeech();
@@ -298,6 +357,7 @@ export function speakWithBrowser(text: string, onEnded?: () => void): () => void
 
   // Clean formatting characters for clear, human-like voice synthesis
   const cleanText = text
+    .replace(/```[\s\S]*?```/g, '')
     .replace(/[*#_`~>\[\]]/g, '')
     .replace(/\s+/g, ' ')
     .trim();
@@ -307,48 +367,66 @@ export function speakWithBrowser(text: string, onEnded?: () => void): () => void
     return () => {};
   }
 
+  let cancelled = false;
   const utterance = new SpeechSynthesisUtterance(cleanText);
-  utterance.lang = 'en-US';
-  utterance.rate = 0.98;
-  utterance.pitch = 1.05;
 
-  const femaleVoice = findAmericanFemaleVoice();
-  if (femaleVoice) {
-    utterance.voice = femaleVoice;
-  } else {
-    // If voices haven't loaded yet in Chrome, try once more on onvoiceschanged
-    const onVoices = () => {
-      cachedBrowserVoices = window.speechSynthesis.getVoices();
-      const retryVoice = findAmericanFemaleVoice();
-      if (retryVoice) {
-        utterance.voice = retryVoice;
-      }
+  // Force language setting to English (en-US) explicitly
+  utterance.lang = 'en-US';
+  utterance.rate = 0.96;   // Natural, conversational pacing
+  utterance.pitch = 1.02;  // Articulate, warm female tone
+  utterance.volume = 1.0;
+
+  const assignVoiceAndSpeak = (voices: SpeechSynthesisVoice[]) => {
+    if (cancelled) return;
+
+    const femaleVoice = findAmericanFemaleVoice(voices);
+    if (femaleVoice) {
+      utterance.voice = femaleVoice;
+      utterance.lang = femaleVoice.lang || 'en-US';
+    } else {
+      utterance.lang = 'en-US';
+    }
+
+    utterance.onend = () => {
+      if (onEnded) onEnded();
     };
-    window.speechSynthesis.addEventListener('voiceschanged', onVoices, { once: true });
+
+    utterance.onerror = (e) => {
+      console.warn('Browser speech synthesis error:', e);
+      if (onEnded) onEnded();
+    };
+
+    window.speechSynthesis.speak(utterance);
+  };
+
+  const currentVoices = cachedBrowserVoices.length > 0 ? cachedBrowserVoices : window.speechSynthesis.getVoices();
+  if (currentVoices.length > 0) {
+    cachedBrowserVoices = currentVoices;
+    assignVoiceAndSpeak(currentVoices);
+  } else {
+    ensureVoicesLoaded().then(voices => {
+      assignVoiceAndSpeak(voices);
+    });
   }
 
-  utterance.onend = () => {
-    if (onEnded) onEnded();
-  };
-
-  utterance.onerror = () => {
-    if (onEnded) onEnded();
-  };
-
-  window.speechSynthesis.speak(utterance);
-
   return () => {
-    window.speechSynthesis.cancel();
+    cancelled = true;
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
   };
 }
 
 /**
- * Speaks HERA's response using high quality Gemini TTS (Aoede - American Female voice) with seamless browser fallback
+ * Speaks HERA's response using a high-quality American female voice and forces English (en-US) language.
+ * Prioritizes Gemini High-Fidelity Studio Speech (Aoede voice) with seamless browser fallback.
  */
 export async function speakHera(text: string, onEnded?: () => void): Promise<() => void> {
   stopCurrentSpeech();
 
+  // Clean formatting and markdown to ensure natural phonetics and conversational delivery
   const cleanText = text
+    .replace(/```[\s\S]*?```/g, '')
     .replace(/[*#_`~>\[\]]/g, '')
     .replace(/\s+/g, ' ')
     .trim();
@@ -358,16 +436,21 @@ export async function speakHera(text: string, onEnded?: () => void): Promise<() 
     return () => {};
   }
 
-  // Try Gemini high-fidelity American female voice (Aoede) TTS first
+  // Pre-load browser voices in the background to ensure instantaneous fallback if needed
+  if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+    ensureVoicesLoaded();
+  }
+
+  // 1. Try Gemini Studio TTS (Aoede - Natural American Female Voice in English)
   try {
     const ttsResult = await generateSpeechAudio(cleanText);
     if (ttsResult.success && ttsResult.audioBase64) {
       return await playWavAudio(ttsResult.audioBase64, onEnded);
     }
   } catch (err) {
-    console.warn('Gemini TTS failed, falling back to browser synthesis:', err);
+    console.warn('Gemini TTS failed, falling back to browser American female voice:', err);
   }
 
-  // Fallback to browser synthesis with American female voice
+  // 2. Seamless Fallback: Browser Web Speech explicitly forced to English (en-US) and American female voice
   return speakWithBrowser(cleanText, onEnded);
 }

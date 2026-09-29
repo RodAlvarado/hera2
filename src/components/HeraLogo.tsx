@@ -28,16 +28,16 @@ export const HeraLogo: React.FC<HeraLogoProps> = ({
     return (
       <div className={`flex items-center gap-3 ${className}`}>
         {/* Official Hera Gold & Navy Crest */}
-        <div className="w-10 h-10 rounded-xl overflow-hidden shadow-xs shrink-0 border border-amber-500/20 bg-[#07152B] flex items-center justify-center relative">
+        <div className="w-10 h-10 rounded-xl overflow-hidden shadow-xs shrink-0 flex items-center justify-center relative">
           <img
-            src="/logo.svg"
-            alt="HERA Logo"
-            className="w-full h-full object-contain p-0.5"
+            src="/logo.png"
+            alt="HERA"
+            className="w-full h-full object-contain"
             loading="eager"
           />
         </div>
 
-        {/* Brand Name & Typography - No 'SaaS ATS' */}
+        {/* Brand Name & Typography - Pure HERA, no 'SaaS ATS' */}
         <div>
           <div className="flex items-center gap-2">
             <span className="font-serif font-extrabold text-lg tracking-wider text-[#07152B]">
@@ -56,11 +56,11 @@ export const HeraLogo: React.FC<HeraLogoProps> = ({
 
   // Standalone Mark / Icon
   return (
-    <div className={`${currentSize} rounded-xl overflow-hidden shadow-xs shrink-0 border border-amber-500/20 bg-[#07152B] flex items-center justify-center relative ${className}`}>
+    <div className={`${currentSize} rounded-xl overflow-hidden shadow-xs shrink-0 flex items-center justify-center relative ${className}`}>
       <img
-        src="/logo.svg"
-        alt="HERA Logo"
-        className="w-full h-full object-contain p-0.5"
+        src="/logo.png"
+        alt="HERA"
+        className="w-full h-full object-contain"
         loading="eager"
       />
     </div>
