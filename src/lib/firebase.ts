@@ -25,7 +25,30 @@ import {
   orderBy, 
   serverTimestamp 
 } from 'firebase/firestore';
-import firebaseConfig from '../../firebase-applet-config.json';
+// Default Firebase configuration for HERA
+const DEFAULT_FIREBASE_CONFIG = {
+  projectId: "gen-lang-client-0563037959",
+  appId: "1:134550314346:web:7f4784a599f314f3e8d913",
+  apiKey: "AIzaSyBgmzpr1RcfMr59Z97x1duuept3g2VwNFE",
+  authDomain: "gen-lang-client-0563037959.firebaseapp.com",
+  firestoreDatabaseId: "ai-studio-airecruiter-829919ed-7164-48e9-9bf0-1470127cb657",
+  storageBucket: "gen-lang-client-0563037959.firebasestorage.app",
+  messagingSenderId: "134550314346",
+  measurementId: "",
+  oAuthClientId: "134550314346-nr06a9vbdl9hctgd2qdm21qri7i6trov.apps.googleusercontent.com",
+  recaptchaSiteKey: ""
+};
+
+// Safe eager glob import: will NOT fail the Vite/Rollup build if firebase-applet-config.json is absent or gitignored
+const appletConfigs = (typeof import.meta !== 'undefined' && typeof (import.meta as any).glob === 'function')
+  ? ((import.meta as any).glob('../../firebase-applet-config.json', { eager: true }) as Record<string, any>)
+  : {};
+const localConfig = appletConfigs['../../firebase-applet-config.json']?.default || appletConfigs['../../firebase-applet-config.json'] || {};
+
+const firebaseConfig = {
+  ...DEFAULT_FIREBASE_CONFIG,
+  ...localConfig,
+};
 
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 
