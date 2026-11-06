@@ -94,7 +94,9 @@ export function getExpiresAtMillis(expiresAt: any): number | null {
  */
 export function isUserSubscriptionActive(profile: UserProfile | null | undefined): boolean {
   if (!profile) return false;
-  const isDev = profile.email?.toLowerCase() === 'rodrigoalto25@gmail.com' || profile.uid === 'MofrK18CvYXsecnf8a6WynBeJWN2';
+  const isDev = profile.email?.toLowerCase() === 'rodrigoalto25@gmail.com' || 
+                profile.email?.toLowerCase() === 'matiaslunateran2003@gmail.com' ||
+                profile.uid === 'MofrK18CvYXsecnf8a6WynBeJWN2';
   if (isDev) return true;
 
   if (profile.subscriptionStatus !== 'active') return false;
@@ -124,6 +126,7 @@ export interface InterviewRecord {
 // Get or initialize user profile document in Firestore
 export async function syncUserProfile(user: User): Promise<UserProfile> {
   const isRodrigoDev = user.email?.toLowerCase() === 'rodrigoalto25@gmail.com';
+  const isMatiasUser = user.email?.toLowerCase() === 'matiaslunateran2003@gmail.com';
 
   try {
     const userRef = doc(db, 'users', user.uid);
@@ -149,8 +152,25 @@ export async function syncUserProfile(user: User): Promise<UserProfile> {
         }
       }
 
+      // Auto-grant Pro Plan with 100 interviews for Matias Luna
+      if (isMatiasUser && (data.subscriptionPlan !== 'pro' || data.subscriptionStatus !== 'active' || (data.interviewsLimit ?? 0) < 100)) {
+        data.subscriptionStatus = 'active';
+        data.subscriptionPlan = 'pro';
+        data.interviewsLimit = 100;
+        try {
+          await updateDoc(userRef, {
+            subscriptionStatus: 'active',
+            subscriptionPlan: 'pro',
+            interviewsLimit: 100,
+            updatedAt: serverTimestamp(),
+          });
+        } catch (updateErr) {
+          console.warn("Could not update Firestore profile for Matias:", updateErr);
+        }
+      }
+
       // Check monthly subscription expiration for paid plans (keep evaluations intact)
-      if (!isRodrigoDev && data.subscriptionStatus === 'active' && data.subscriptionPlan) {
+      if (!isRodrigoDev && !isMatiasUser && data.subscriptionStatus === 'active' && data.subscriptionPlan) {
         const expiresMs = getExpiresAtMillis(data.subscriptionExpiresAt);
         if (expiresMs && Date.now() > expiresMs) {
           data.subscriptionStatus = 'past_due';
@@ -179,12 +199,12 @@ export async function syncUserProfile(user: User): Promise<UserProfile> {
     const newProfile: UserProfile = {
       uid: user.uid,
       email: user.email || '',
-      displayName: user.displayName || user.email?.split('@')[0] || 'Usuario',
+      displayName: user.displayName || user.email?.split('@')[0] || 'Matias Luna',
       photoURL: user.photoURL || '',
-      subscriptionStatus: isRodrigoDev ? 'active' : 'free_trial',
-      subscriptionPlan: isRodrigoDev ? 'corp' : undefined,
+      subscriptionStatus: (isRodrigoDev || isMatiasUser) ? 'active' : 'free_trial',
+      subscriptionPlan: isRodrigoDev ? 'corp' : (isMatiasUser ? 'pro' : undefined),
       interviewsCount: 0,
-      interviewsLimit: isRodrigoDev ? 100 : 2, // 100 for Corp / 2 for free trial
+      interviewsLimit: (isRodrigoDev || isMatiasUser) ? 100 : 2, // 100 for Corp & Matias / 2 for free trial
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
     };
@@ -198,10 +218,10 @@ export async function syncUserProfile(user: User): Promise<UserProfile> {
       email: user.email || '',
       displayName: user.displayName || user.email?.split('@')[0] || 'Usuario',
       photoURL: user.photoURL || '',
-      subscriptionStatus: isRodrigoDev ? 'active' : 'free_trial',
-      subscriptionPlan: isRodrigoDev ? 'corp' : undefined,
+      subscriptionStatus: (isRodrigoDev || isMatiasUser) ? 'active' : 'free_trial',
+      subscriptionPlan: isRodrigoDev ? 'corp' : (isMatiasUser ? 'pro' : undefined),
       interviewsCount: 0,
-      interviewsLimit: isRodrigoDev ? 100 : 2,
+      interviewsLimit: (isRodrigoDev || isMatiasUser) ? 100 : 2,
     };
   }
 }
